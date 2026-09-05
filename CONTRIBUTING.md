@@ -96,12 +96,12 @@ A push to `main` whose `package.json` version is already on the registry
 **skips** the publish step (the workflow checks `npm view` first) instead of
 failing, so doc-only pushes stay green; bump the version to release.
 
-**One-time setup before the first publish:** create the GitHub `npm`
-environment, and register this package as an npm **Trusted Publisher** (org /
-repo / `library-deploy.yml` / environment `npm`). If npmjs.com will not accept a
-trusted publisher for a package name that does not exist yet, the workflow
-carries a commented one-time token-bootstrap step — use it exactly once, then
-delete the token and switch back.
+**How the package was bootstrapped (done once, 2026-09-06):** npm registers a
+trusted publisher only for a package that already exists, so 0.0.1 was published
+by hand to create the package. The trusted publisher (org `TheClearSky` / repo
+`react-blender-nodes-codegen` / `library-deploy.yml` / environment `npm`) was
+then registered and token-based publishing disallowed on npmjs.com. Every
+version from 0.0.2 on is published by CI only; there is no token anywhere.
 
 ## The clean-room type gate
 
