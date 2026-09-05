@@ -1,0 +1,25 @@
+logs
+*.log
+npm-debug.log*
+node_modules
+dist
+dist-ssr
+*.local
+
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+test-results/
+.playwright-mcp/
+.claude/
+review/
+
+# Storybook static build (deployed to GitHub Pages by CI)
+storybook-static/
