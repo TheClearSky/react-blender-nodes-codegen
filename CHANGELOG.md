@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.0.1 — 2026-09-06
 
-### Added — initial extraction (0.0.1)
+### Added — initial extraction
 
 - Extracted the codegen subsystem out of `@theclearsky/react-blender-nodes` into
   this standalone package. The base library now carries no `typescript` /
