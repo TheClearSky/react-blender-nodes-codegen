@@ -1,0 +1,15 @@
+# Docs link for dependabot for quick reference
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    # Create a single PR for all npm dependencies
+    groups:
+      npmDependencies:
+        patterns:
+          - '*'
