@@ -1,0 +1,75 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Builds this plugin's Storybook (the CodegenStudio) and deploys it to GitHub
+# Pages on a push to `main`. The host library's Storybook embeds these stories
+# from that Pages site by URL, so the MIT host never bundles this AGPL code.
+#
+# Prerequisite (one-time, repo settings): Pages → Source → "GitHub Actions".
+
+jobs:
+  build-storybook:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    concurrency:
+      # Its own group — never shared with library-deploy.yml — and a superseded
+      # PR build is cancelled rather than queued.
+      group: ci-storybook-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The public site must not deploy from a tree that does not type-check
+      # or lint — cheap gates in front of the Storybook build.
+      - name: Type-check
+        run: npm run type-check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: storybook-static
+
+  deploy-storybook:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build-storybook
+    runs-on: ubuntu-22.04
+    environment:
+      name: github-pages
+      # `id: deployment` on the deploy step below is load-bearing: this URL
+      # resolves to an empty string without it.
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: deploy-pages-${{ github.ref }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "resolveJsonModule": true,
+
+    /* Paths resolution — `@/*` for local only.
+       DELIBERATELY NO path for `@theclearsky/react-blender-nodes/contract`: it must
+       resolve through the `file:` link's node_modules exports map (→ main's
+       `dist/contract.d.ts`), NOT a direct sibling-file path. A tsconfig path makes
+       API Extractor treat the peer as a LOCAL file and INLINE its types into this
+       package's rolled `dist/index.d.ts` — which re-binds the inlined React
+       `CSSProperties` to THIS repo's `@types/react` and breaks assignability against
+       a consumer's own React tree (the classic dual-`@types/react` failure). Via
+       node_modules the peer stays EXTERNAL, so the rolled `.d.ts` keeps a bare
+       `import … from '@theclearsky/react-blender-nodes/contract'` that each consumer
+       resolves against their own install. (Requires main to be built.) */
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}
